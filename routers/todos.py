@@ -1,15 +1,20 @@
 from typing import Annotated
+from pathlib import Path as FilePath
 from fastapi import FastAPI, Depends, HTTPException, Path, APIRouter, Request
 from pydantic import BaseModel, Field
-from ..database import SessionLocal
+try:
+    from ..database import SessionLocal
+    from ..models import Todo
+except ImportError:
+    from database import SessionLocal
+    from models import Todo
 from sqlalchemy.orm import Session
 from starlette import status
-from ..models import Todo
 from .auth import get_current_user
 from starlette.responses import JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory="TodoApp/templates")
+templates = Jinja2Templates(directory=str(FilePath(__file__).resolve().parents[1] / "templates"))
 
 router = APIRouter(
     prefix="/todos",

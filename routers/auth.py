@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from fastapi import Depends, APIRouter, HTTPException, status, Request
 from pydantic import BaseModel, Field
@@ -6,8 +7,12 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
-from ..database import SessionLocal
-from ..models import Users
+try:
+    from ..database import SessionLocal
+    from ..models import Users
+except ImportError:
+    from database import SessionLocal
+    from models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
@@ -46,7 +51,7 @@ def get_db():
         db.close()
 
 db_dependency = Annotated[Session, Depends(get_db)]
-templates = Jinja2Templates(directory="TodoApp/templates")
+templates = Jinja2Templates(directory=str(Path(__file__).resolve().parents[1] / "templates"))
 
 ## pages  ##
 

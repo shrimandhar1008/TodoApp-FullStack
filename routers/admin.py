@@ -1,10 +1,14 @@
 from typing import Annotated
 from fastapi import FastAPI, Depends, HTTPException, Path, APIRouter
 from pydantic import BaseModel, Field
-from ..database import SessionLocal
+try:
+    from ..database import SessionLocal
+    from ..models import Todo
+except ImportError:
+    from database import SessionLocal
+    from models import Todo
 from sqlalchemy.orm import Session
 from starlette import status
-from ..models import Todo
 from .auth import get_current_user
 
 router = APIRouter(

@@ -1,4 +1,7 @@
-from .database import Base
+try:
+    from .database import Base
+except ImportError:
+    from database import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 
 class Users(Base):
